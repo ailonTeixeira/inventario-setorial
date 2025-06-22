@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+        <div class="card p-4 shadow-sm">
+            <h1 class="mb-4">Seleção de Setor</h1>
+            <p class="lead mb-4">Digite o nome de um setor para acessá-lo. Se o setor não existir, ele será criado automaticamente.</p>
+            
+            <form method="POST">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control form-control-lg" name="nome_setor" placeholder="Ex: SAME, FINANCEIRO, SALA DE FISIOTERAPIA" list="setores-datalist" required>
+                    <button class="btn btn-primary" type="submit">Adicionar / Acessar Setor</button>
+                </div>
+            </form>
+
+            <datalist id="setores-datalist">
+                {% for setor in setores %}
+                <option value="{{ setor.nome }}">
+                {% endfor %}
+            </datalist>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

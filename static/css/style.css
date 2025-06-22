@@ -1,0 +1,39 @@
+/* Estilo para a tela de login */
+.login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #e9ecef;
+}
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.logo-img {
+    max-width: 150px;
+    margin-bottom: 1.5rem;
+}
+
+/* Estilos para impressão do relatório */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #area-impressao, #area-impressao * {
+        visibility: visible;
+    }
+    #area-impressao {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    .no-print {
+        display: none !important;
+    }
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório - {{ setor.nome }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="area-impressao" class="container mt-4">
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" style="max-width: 120px;">
+            <h1 class="mt-2">Relatório de Inventário</h1>
+        </div>
+        
+        <h3>Setor: <span class="fw-bold">{{ setor.nome }}</span></h3>
+        <p>Relatório gerado em: {{ "now"|strftime('%d/%m/%Y %H:%M:%S') }}</p>
+
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Material</th>
+                    <th>Marca</th>
+                    <th>Tombo/Patrimônio</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for material in materiais %}
+                <tr>
+                    <td>{{ material.nome }}</td>
+                    <td>{{ material.marca }}</td>
+                    <td>{{ material.tombo }}</td>
+                    <td>{{ material.estado }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Nenhum material neste setor.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="text-muted mt-4">Total de itens: {{ materiais|length }}</p>
+    </div>
+
+    <div class="container text-center mt-4 no-print">
+        <button class="btn btn-primary" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir / Salvar como PDF</button>
+        <a href="{{ url_for('setor_detalhe', setor_id=setor.id) }}" class="btn btn-secondary">Voltar</a>
+        <p class="mt-2"><small>Dica: Na janela de impressão, escolha "Salvar como PDF" para gerar um arquivo.</small></p>
+    </div>
+</body>
+</html>

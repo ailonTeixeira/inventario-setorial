@@ -1,0 +1,21 @@
+# Ambiente Virtual
+bin/
+lib/
+lib64/
+include/
+pyvenv.cfg
+
+# Arquivos de Cache do Python
+__pycache__/
+
+# Banco de dados SQLite
+*.db
+
+# Arquivos gerados pelo PyInstaller
+dist/
+build/
+*.spec
+
+# Arquivos de log e outros
+*.log
+

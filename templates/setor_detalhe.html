@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Setor: {{ setor.nome }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-building"></i> Setor: <span class="fw-bold">{{ setor.nome }}</span></h1>
+    <div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materialModal" onclick="prepareAddModal()">
+            <i class="bi bi-plus-circle"></i> Adicionar Material
+        </button>
+        <a href="{{ url_for('gerar_relatorio_word', setor_id=setor.id) }}" class="btn btn-secondary">
+            <i class="bi bi-file-word"></i> Baixar Relatório (.docx)
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title">Materiais do Setor</h5>
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Material</th>
+                    <th>Marca</th>
+                    <th>Tombo/Patrimônio</th>
+                    <th>Estado</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for material in materiais %}
+                <tr>
+                    <td>{{ material.nome }}</td>
+                    <td>{{ material.marca }}</td>
+                    <td>{{ material.tombo }}</td>
+                    <td><span class="badge 
+                        {% if material.estado == 'Novo' %}bg-success
+                        {% elif material.estado == 'Bom' %}bg-primary
+                        {% elif material.estado == 'Regular' %}bg-warning
+                        {% endif %}">{{ material.estado }}</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-warning" 
+                                data-bs-toggle="modal" data-bs-target="#materialModal"
+                                onclick="prepareEditModal('{{ material.id }}', '{{ material.nome }}', '{{ material.marca }}', '{{ material.tombo }}', '{{ material.estado }}')">
+                            <i class="bi bi-pencil"></i> Editar
+                        </button>
+                        <form method="POST" action="{{ url_for('apagar_material_route', material_id=material.id) }}" class="d-inline" onsubmit="return confirm('Tem certeza que deseja apagar este material?');">
+                            <input type="hidden" name="setor_id" value="{{ setor.id }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> Apagar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center">Nenhum material cadastrado neste setor.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Material -->
+<div class="modal fade" id="materialModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="materialForm" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Adicionar Material</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="setor_id" value="{{ setor.id }}">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Material</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="marca" class="form-label">Marca</label>
+                        <input type="text" class="form-control" id="marca" name="marca">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tombo" class="form-label">Tombo/Patrimônio</label>
+                        <input type="text" class="form-control" id="tombo" name="tombo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="estado" class="form-label">Estado de Conservação</label>
+                        <select class="form-select" id="estado" name="estado" required>
+                            <option value="Novo">Novo</option>
+                            <option value="Bom">Bom</option>
+                            <option value="Regular">Regular</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const modalForm = document.getElementById('materialForm');
+    const modalLabel = document.getElementById('modalLabel');
+    const nomeInput = document.getElementById('nome');
+    const marcaInput = document.getElementById('marca');
+    const tomboInput = document.getElementById('tombo');
+    const estadoInput = document.getElementById('estado');
+
+    function prepareAddModal() {
+        modalForm.action = "{{ url_for('adicionar_material_route') }}";
+        modalLabel.textContent = 'Adicionar Novo Material';
+        modalForm.reset();
+    }
+
+    function prepareEditModal(id, nome, marca, tombo, estado) {
+        modalForm.action = `/material/editar/${id}`;
+        modalLabel.textContent = 'Editar Material';
+        nomeInput.value = nome;
+        marcaInput.value = marca;
+        tomboInput.value = tombo;
+        estadoInput.value = estado;
+    }
+</script>
+{% endblock %}

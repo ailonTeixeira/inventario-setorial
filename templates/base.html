@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Inventário Setorial HGGR{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body>
+    <!-- Menu Lateral (Offcanvas) -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Setores Cadastrados</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+<!-- Em templates/base.html, dentro do <div class="offcanvas-body"> -->
+        <div class="list-group">
+            {% for setor_menu in todos_setores %}
+                <a href="{{ url_for('setor_detalhe', setor_id=setor_menu.id) }}" class="list-group-item list-group-item-action">
+                    {{ setor_menu.nome }}
+                </a>
+            {% endfor %}
+        
+            <!-- Botão para o Relatório Geral Excel -->
+            {% if todos_setores %}
+            <hr>
+            <a href="{{ url_for('gerar_relatorio_geral_excel') }}" class="list-group-item list-group-item-action list-group-item-success text-center">
+                <i class="bi bi-file-earmark-excel"></i>
+                <strong>Gerar Inventário Geral (Excel)</strong>
+            </a>
+            {% endif %}
+        
+            {% if not todos_setores %}
+                <div class="list-group-item">Nenhum setor cadastrado.</div>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Navegação Superior -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button class="btn btn-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                <i class="bi bi-list"></i>
+                <span class="ms-2 d-none d-sm-inline">Lista de Setores Cadastrados</span>
+            </button>
+            <a class="navbar-brand mx-auto" href="{{ url_for('home') }}">Inventário Setorial</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">
+                <i class="bi bi-box-arrow-right"></i> Sair
+            </a>
+        </div>
+    </nav>
+    
+    <main class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
