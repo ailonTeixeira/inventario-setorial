@@ -217,7 +217,6 @@ def gerar_relatorio_geral_excel(): # <--- ESTE É O NOME (ENDPOINT) QUE O FLASK 
         download_name='Inventario_Geral_Setorial.xlsx',
         mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     )
-# Renomeie a rota antiga para evitar confusão ou a delete
-# A rota que renderizava relatorio.html não é mais necessária.
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)
